@@ -1,0 +1,5 @@
+/dist/
+/build/
+/.idea/
+/main.spec
+/setupconfig.iss
