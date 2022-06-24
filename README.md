@@ -3,6 +3,9 @@ FKBilibiliUWP
   `PYQT5` `BiliBiliUWP` `爬虫` `效率工具`   
   
   基于爬虫和PYQT5的图形用户界面的bilibiliUWP视频重命名+整理工具
+
+没有`bilibiliUWP 2.14.71`版本的点这里:[[阿里云链接]2.14.71版本+工具 ](https://www.aliyundrive.com/s/NxkGviXv4aD "点击跳转")
+
 ## 如何使用？
   [使用说明.pdf](https://github.com/love-in-cpp/FKBilibiliUWP/files/8967723/default.pdf)  
 
@@ -10,7 +13,7 @@ FKBilibiliUWP
 
 * [ ] 针对新版加密视频，推出`解密`后再输出的功能  
 * [ ] 增加免除用户**手动选择输出文件夹**的功能  
-* [ ] 增加**免网络**运行功能(~~虽然这个有写md的时间都能做完~~)  
+* [ ] 增加**免网络**运行功能(~~虽然这个功能有写这个md的时间都能做完~~)  
 * [ ] 用 ``C#`` 实现，作为IO操作练手的项目 
 
 ## 界面截图
