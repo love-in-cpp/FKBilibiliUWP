@@ -148,7 +148,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.setWindowIcon(icon)
 
     def ShowAboutDialog(self):
-        about_text = "<p>描述：这是一个致力于解决BiliBiLi UWP版下载视频的名称十分反人类的痛点的软件</p><p>版本：2.0</p><p>@Author：LZY</p><p>@github：love" \
+        about_text = "<p>描述：这是一个致力于解决BiliBiLi UWP版下载视频的名称十分反人类的痛点的软件</p><p>版本：3.0</p><p>@Author：LZY</p><p>@github：love" \
                      "-in-cpp</p> "
         QMessageBox.about(self, '说明', about_text)
 
@@ -170,9 +170,10 @@ class MainApp(QMainWindow, Ui_MainWindow):
 
     def RenameFile(self):
         self.CheckIsChecked()
+        self.progressBar.setValue(0)
         # 进入目录查找dvi文件
         downloadPath = self.downloadDirEdit.toPlainText()
-
+        outputPath = self.outputDirEdit.toPlainText()
         if os.path.isdir(downloadPath) is False:
             self.Log('UWP下载目录的路径存在非法输入！')
 
@@ -183,9 +184,19 @@ class MainApp(QMainWindow, Ui_MainWindow):
                 self.Log('没有找到.dvi文件！请检查下载目录后重试！')
 
             else:
+                # 在outputDir下新建名为dvi[3]文件夹
+                try:
+                    outputPath = FileOperator.MakeDir(outputPath, dviInfoList[3])
+                except Exception as e:
+                    QMessageBox.critical(self, "错误", "已经存在同名文件夹！ Error：" + str(e))
+
                 if self.isSpiderMode:
                     self.Log("开始爬取BV:{0}, 标题:{1} 的所有视频标题,请稍后...".format(dviInfoList[1], dviInfoList[3]))
-                    TitleSpider.GetTxt(dviInfoList[1])  # 调用爬虫产生.txt
+                    try:
+                        TitleSpider.GetTxt(dviInfoList[1], outputPath)
+                    except Exception as e:
+                        QMessageBox.critical(self, "错误", "请检查网络后重试 Error：" + str(e))
+                    # 调用爬虫产生.txt
                     global fileName
                     fileName = TitleSpider.fileName
                     self.LogOnBar('已成功爬取文件:  {0} ！  注：只显示部分文件名'.format(fileName[0:35]))
@@ -193,8 +204,8 @@ class MainApp(QMainWindow, Ui_MainWindow):
 
                 elif self.isLocalMode:
                     self.Log("开始遍历获取BV:{0}, 标题:{1} 的所有视频标题,请稍后...".format(dviInfoList[1], dviInfoList[3]))
-                    localVideoTitleList = FileOperator.GetLocalVideoTitle(downloadPath)
-                    fileName = FileOperator.GetTxt(localVideoTitleList, dviInfoList[3])
+                    localVideoTitleList = FileOperator.GetLocalVideoTitle(downloadPath, dviInfoList[2])
+                    fileName = FileOperator.GetTxt(localVideoTitleList, dviInfoList[3], outputPath)
                     self.Log('已成功获取文件:  {0} ！'.format(fileName))
                 else:
                     self.Log("impossible")
@@ -210,7 +221,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
                 self.Log(s)
 
                 # 复制
-                outputPath = self.outputDirEdit.toPlainText()
+
                 if os.path.isdir(outputPath) is False:
                     self.Log('输出目录的路径存在非法输入！')
                 else:
@@ -218,7 +229,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
 
                     # 重命名
                     self.Log("开始重命名...")
-                    FileOperator.DoRename(outputPath, fileName)
+                    FileOperator.DoRename(outputPath, fileName, dviInfoList[2])
                     self.Log("重命名完毕！")
 
                     # 进度条100％
@@ -228,7 +239,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
                         pass
                     else:
                         self.Log("正在删除程序运行过程中产生的.txt文件")
-                        FileOperator.DeleteTxt(os.getcwd(), fileName)
+                        FileOperator.DeleteTxt(outputPath, fileName)
                         self.Log("删除.txt文件成功！")
                     # 是否删除源文件夹
                     if self.isDeleteDir is True:
