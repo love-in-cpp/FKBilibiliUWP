@@ -7,18 +7,21 @@ FKBilibiliUWP
 没有`bilibiliUWP 2.14.71`版本的点这里:[[阿里云链接]2.14.71版本+工具 ](https://www.aliyundrive.com/s/NxkGviXv4aD "点击跳转")
 
 ## 如何使用？
-  [使用说明.pdf](https://github.com/love-in-cpp/FKBilibiliUWP/files/8967723/default.pdf)  
+  
 
 ## 未来工作 ~~***（可能）***~~
 
 * [ ] 针对新版加密视频，推出`解密`后再输出的功能  
-* [ ] 增加免除用户**手动选择输出文件夹**的功能  
-* [x] 增加**免网络**运行功能(~~虽然这个功能有写这个md的时间都能做完~~)  
+* [x] 增加免除用户**手动选择输出文件夹**的功能  (***状态：Done***) 
+* [x] 增加**免网络**运行功能(~~虽然这个功能有写这个md的时间都能做完~~)  (***状态：Done***) 
 * [ ] 用 ``C#`` 实现，作为IO操作练手的项目
 
 ## 界面截图
-![image](https://user-images.githubusercontent.com/59083942/175336107-07e9105b-483d-4d4b-a081-54ab78cb21a2.png)
-![image](https://user-images.githubusercontent.com/59083942/175336254-3a883510-5f75-4099-aac8-0590cddbaa93.png)
+
+
+## 效果截图
+  程序正确执行后，会在选择的输出文件夹的**目录下**，自动创建一个视频标题名称的子文件夹，整理后的视频存放在子文件夹中。
+
 
 ## 模块功能
 * `TitleSpider.py` 用于获取指定的视频名称列表
