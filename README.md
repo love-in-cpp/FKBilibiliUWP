@@ -4,8 +4,8 @@ FKBilibiliUWP
   
   基于爬虫和PYQT5的图形用户界面的bilibiliUWP视频重命名+整理工具
 
-没有`bilibiliUWP 2.14.71`版本的点这里:[[阿里云链接]2.14.71版本+工具 ](https://www.aliyundrive.com/s/NxkGviXv4aD "点击跳转")
-
+没有`bilibiliUWP 2.14.71`版本的点这里:[[天翼云链接]2.14.71版本+工具 ](https://cloud.189.cn/web/share?code=RZBjeeqiQJBv "点击跳转")
+（访问码：ot1k）
 ## 如何使用？
   [使用文档.pdf](https://github.com/love-in-cpp/FKBilibiliUWP/files/8976604/default.pdf)
 
