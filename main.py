@@ -5,6 +5,7 @@ import threading
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 import FileOperator
+import TestFileSystem
 from MainWindow import Ui_MainWindow
 from icon import img
 import TitleSpider
@@ -36,6 +37,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.txtFileCheckBox.setChecked(False)  # 默认不保存Txt
         self.deleteFileCheckBox.setChecked(True)  # 默认不保留源目录
         self.moveToOutput.setChecked(True)  # 默认不使用复制的方式
+        self.localMode.setChecked(True)
 
     def MutiThreadCopy(self, mp4List, outputPath):
         t = threading.Thread(target=FileOperator.CopyFile, args=(mp4List, outputPath))
@@ -47,7 +49,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
         t.start()
         t.join()
 
-    def CheckIsChecked(self):
+    def CheckIsChecked(self):  # 按下按钮的事件里调用，检查checkbox状态，并提示。最后给对应的bool变量赋值
         self.isSaveTxt = self.txtFileCheckBox.isChecked()
         self.isDeleteDir = self.deleteFileCheckBox.isChecked()
 
@@ -55,6 +57,11 @@ class MainApp(QMainWindow, Ui_MainWindow):
             pass
         else:
             QMessageBox.critical(self, "错误", "请至少勾选一种输出方式！")
+
+        if self.localMode.isChecked() or self.spiderMode.isChecked():
+            pass
+        else:
+            QMessageBox.critical(self, "错误", "请至少勾选一种处理模式（本地模式 或 爬虫模式）！")
 
         if self.copyToOutput.isChecked():
             self.isCopyOutput = True
@@ -65,6 +72,17 @@ class MainApp(QMainWindow, Ui_MainWindow):
             self.isMoveOutput = True
         else:
             self.isMoveOutput = False
+
+        if self.localMode.isChecked():
+            self.isLocalMode = True
+        else:
+            self.isLocalMode = False
+
+        if self.spiderMode.isChecked():
+            QMessageBox.warning(self, "警告", "爬虫模式依赖网络，关闭本窗口前请确保代理服务是关闭状态")
+            self.isSpiderMode = True
+        else:
+            self.isSpiderMode = False
 
     def SetLogText(self):
         self.activityLogEdit.setReadOnly(True)
@@ -85,7 +103,10 @@ class MainApp(QMainWindow, Ui_MainWindow):
 
         self.copyToOutput.clicked.connect(self.DisableMove)
         self.moveToOutput.clicked.connect(self.DisableCopy)
+        self.localMode.clicked.connect(self.DisableSpiderMode)
+        self.spiderMode.clicked.connect(self.DisableLocalMode)
 
+    # 处理checkbox冲突
     def DisableCopy(self):
         if self.copyToOutput.isChecked():
             self.copyToOutput.setChecked(False)
@@ -93,6 +114,16 @@ class MainApp(QMainWindow, Ui_MainWindow):
     def DisableMove(self):
         if self.moveToOutput.isChecked():
             self.moveToOutput.setChecked(False)
+
+    def DisableSpiderMode(self):
+        if self.spiderMode.isChecked():
+            self.spiderMode.setChecked(False)
+        self.renameButton.setText("一键整理+重命名")
+
+    def DisableLocalMode(self):
+        if self.localMode.isChecked():
+            self.localMode.setChecked(False)
+        self.renameButton.setText("一键爬取+整理+重命名")
 
     def InitMenuBar(self):
         # 添加menu“帮助”的事件
@@ -132,7 +163,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
     def SetBaseInfo(self):
         self.setWindowTitle('BiliBili UWP版视频下载整理工具')
         self.downloadDirEdit.setToolTip(r"例如：E:\BiliDownload\44938322")
-        self.downloadDirEdit.setPlaceholderText("路径请具体到下载的视频对应的单个文件夹，暂不支持批量处理")
+        self.downloadDirEdit.setPlaceholderText("路径请具体到单个数字名称的文件夹，暂不支持文件夹的批量处理")
         self.outputDirEdit.setPlaceholderText("您希望处理后的文件被保存到的地方")
 
     # def FindFiles(self,downloadPath):
@@ -152,17 +183,24 @@ class MainApp(QMainWindow, Ui_MainWindow):
                 self.Log('没有找到.dvi文件！请检查下载目录后重试！')
 
             else:
+                if self.isSpiderMode:
+                    self.Log("开始爬取BV:{0}, 标题:{1} 的所有视频标题,请稍后...".format(dviInfoList[1], dviInfoList[3]))
+                    TitleSpider.GetTxt(dviInfoList[1])  # 调用爬虫产生.txt
+                    global fileName
+                    fileName = TitleSpider.fileName
+                    self.LogOnBar('已成功爬取文件:  {0} ！  注：只显示部分文件名'.format(fileName[0:35]))
+                    self.Log('已成功爬取文件:  {0} ！'.format(fileName))
 
-                self.Log("开始爬取BV:{0}, 标题:{1} 的所有视频标题,请稍后...".format(dviInfoList[1], dviInfoList[3]))
-                TitleSpider.GetTxt(dviInfoList[1])  # 调用爬虫
-                global fileName
-                fileName = TitleSpider.fileName
-                self.LogOnBar('已成功爬取文件:  {0} ！  注：只显示部分文件名'.format(fileName[0:35]))
-                self.Log('已成功爬取文件:  {0} ！'.format(fileName))
+                elif self.isLocalMode:
+                    self.Log("开始遍历获取BV:{0}, 标题:{1} 的所有视频标题,请稍后...".format(dviInfoList[1], dviInfoList[3]))
+                    localVideoTitleList = FileOperator.GetLocalVideoTitle(downloadPath)
+                    fileName = FileOperator.GetTxt(localVideoTitleList, dviInfoList[3])
+                    self.Log('已成功获取文件:  {0} ！'.format(fileName))
+                else:
+                    self.Log("impossible")
 
                 # 找到所有downloadPath的.mp4文件
                 mp4List = FileOperator.FindAllMp4Files(downloadPath)[0]  # mp4真正在的地方
-
                 # Log
                 mp4nameList = FileOperator.FindAllMp4Files(downloadPath)[1]
                 mp4nameList.sort(key=GetSeries)
@@ -213,6 +251,12 @@ class MainApp(QMainWindow, Ui_MainWindow):
             self.Log("开始移动... 这可能需要一段时间...")
             self.MutiThreadMove(mp4List, outputPath)  # 多线程移动
             self.Log("移动完毕！")
+
+    def DSpiderMode(self):
+        pass
+
+    def DoLocalMode(self):
+        pass
 
 
 if __name__ == '__main__':
