@@ -18,10 +18,9 @@ def FinData(url):
     dataList = []
     getUrl = requests.get(url=url)
     bsHtml = BeautifulSoup(getUrl.text, "html.parser")
-    global urlTitle
     urlTitleList = bsHtml.get_text().title().split('\n', 1)
     urlTitle = urlTitleList[0][:-30].lstrip()
-    dataList.append(str(urlTitle))
+    # dataList.append(str(urlTitle))
     bsFinData = bsHtml.select('script')
     bsData = ''
 
@@ -38,7 +37,7 @@ def FinData(url):
     return dataList, urlTitle
 
 
-def saveAsTxt(video_list):
+def saveAsTxt(video_list, urlTitle):
     fileTitle = urlTitle + ".txt"  # 合成.txt格式 文件名
 
     # 去除标题中的Windows不兼容的的命名字
@@ -63,4 +62,5 @@ def GetTxt(bid):
     url = urlPart + bv
 
     dataList, urlTile = FinData(url)
-    fileName = saveAsTxt(dataList)
+
+    fileName = saveAsTxt(dataList, urlTile)
