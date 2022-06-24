@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1045</width>
-    <height>301</height>
+    <height>316</height>
    </rect>
   </property>
   <property name="font">
@@ -143,7 +143,7 @@ p, li { white-space: pre-wrap; }
      </font>
     </property>
     <property name="text">
-     <string>一键爬取+重命名</string>
+     <string>一键整理+重命名</string>
     </property>
    </widget>
    <widget class="QCheckBox" name="copyToOutput">
@@ -167,7 +167,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QCheckBox" name="txtFileCheckBox">
     <property name="geometry">
      <rect>
-      <x>380</x>
+      <x>160</x>
       <y>180</y>
       <width>110</width>
       <height>25</height>
@@ -256,7 +256,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QCheckBox" name="deleteFileCheckBox">
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>290</x>
       <y>180</y>
       <width>211</width>
       <height>25</height>
@@ -293,7 +293,46 @@ p, li { white-space: pre-wrap; }
      <string notr="true">color:rgb(255, 0, 0)</string>
     </property>
     <property name="text">
-     <string>使用前请关闭代理服务并确保网络环境通畅哦！</string>
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="spiderMode">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>190</y>
+      <width>91</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>阿里巴巴普惠体 R</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>爬虫模式</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="localMode">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>170</y>
+      <width>91</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>阿里巴巴普惠体 R</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>本地模式</string>
     </property>
    </widget>
   </widget>
