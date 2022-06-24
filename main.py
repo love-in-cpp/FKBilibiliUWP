@@ -148,7 +148,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.setWindowIcon(icon)
 
     def ShowAboutDialog(self):
-        about_text = "<p>描述：这是一个致力于解决BiliBiLi UWP版下载视频的名称十分反人类的痛点的软件</p><p>版本：1.0</p><p>@Author：LZY</p><p>@github：love" \
+        about_text = "<p>描述：这是一个致力于解决BiliBiLi UWP版下载视频的名称十分反人类的痛点的软件</p><p>版本：2.0</p><p>@Author：LZY</p><p>@github：love" \
                      "-in-cpp</p> "
         QMessageBox.about(self, '说明', about_text)
 
