@@ -2,7 +2,7 @@ FKBilibiliUWP
 =======================
   `PYQT5` `BiliBiliUWP` `爬虫` `效率工具`   
   
-  基于爬虫（可选）、IO和PYQT5图形用户界面的bilibiliUWP视频解密+重命名+整理工具
+  基于爬虫（可选）、IO和PYQT5图形用户界面的bilibiliUWP视频`解密`+重命名+整理工具
 
 没有`bilibiliUWP 2.14.71`版本的点这里:[[天翼云链接]2.14.71版本+工具 ](https://cloud.189.cn/web/share?code=RZBjeeqiQJBv "点击跳转")
 （访问码：ot1k）
