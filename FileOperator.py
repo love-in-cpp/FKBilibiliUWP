@@ -69,6 +69,69 @@ def FindAllMp4Files(path):
     return [fileList, fileNamelist]
 
 
+def FindSpecialMp4Files(path, aID):
+    # 提取出含有指定特征的fileList
+    fileTypeList = ['mp4', 'MP4', 'mP4', 'Mp4']
+    fileList = []  # 存储要copy的文件全名
+    fileNameList = []
+    # 获取要被命名的文件，包含了文件夹有其它文件或文件夹的情况
+    for dirPath, dirNames, fileNames in os.walk(path):
+        for file in fileNames:
+            if aID in file and file.split('.')[-1] in fileTypeList:  #
+                oldName = os.path.join(dirPath, file)  # 文件全名
+                if os.path.isdir(oldName):
+                    continue
+                fileList.append(oldName)
+                fileNameList.append(file)
+
+    return [fileList, fileNameList]
+
+
+# 检测文件是否加密 是则解密
+def DecryptMp4(path, aID):
+    isEncrypted = None
+    s = None
+    encryptedFile = None
+    decryptedFile = None
+    countEncChar = 0  # 检测'xff'数量
+    countDecChar = 0  # 检测'x00'数量
+
+    fileList = FindSpecialMp4Files(path, aID)[0]
+
+    testFile = fileList[0]
+    with open(testFile, "rb") as f:
+        s = str(f.readline())[3:14]
+    f.close()
+    sList = s.split('\\')  # ['xff', 'xff', 'xff']
+    for item in sList:
+        if 'xff' in item:
+            countEncChar += 1
+        if 'x00' in item:
+            countDecChar += 1
+
+    if countEncChar == 3:
+        isEncrypted = True  # 加密
+    if countDecChar == 3:
+        isEncrypted = False  # 未加密
+
+    if isEncrypted is None:
+        return
+
+    if not isEncrypted:  # 如果未加密
+        pass
+    else:  # 如果加密则解密
+        for file in fileList:
+            encryptedFile = open(file, 'rb')
+            encryptedFile.seek(3)
+            byte = encryptedFile.read()
+
+            with open(file, 'wb') as decryptedFile:
+                decryptedFile.write(byte)
+
+        encryptedFile.close()
+        decryptedFile.close()
+
+
 # return fileList
 def CopyFile(srcFileList, dstFolder):
     for file in srcFileList:
@@ -92,26 +155,17 @@ def DoRename(path, fileName, aID):
     with open(filName, encoding='UTF-8') as f:
         lines = f.readlines()  # 新文件名按行保存
 
-    # 提取出含有指定特征的fileList
-    fileTypeList = ['mp4', 'MP4', 'mP4', 'Mp4']
-    fileList = []  # 存储要copy的文件全名
-    # 获取要被命名的文件，包含了文件夹有其它文件或文件夹的情况
-
-    for dirPath, dirNames, fileNames in os.walk(path):
-        for file in fileNames:
-            if aID in file and file.split('.')[-1] in fileTypeList:  #
-                oldName = os.path.join(dirPath, file)  # 文件全名
-                if os.path.isdir(oldName):
-                    continue
-                fileList.append(oldName)
+    fileList = FindSpecialMp4Files(path, aID)[0]  # 存储要copy的文件全名
 
     fileList.sort(key=GetSeries)
     # fileList = set(fileList)  # 防止文件重复
-
+    index = 0
+    frontIndex = 0
     for oldDir in fileList:
         filetype = '.' + oldDir.split('.')[-1]
-        index = int(oldDir.split('_')[-2]) - 1
-        newDir = os.path.join(path, str(index + 1) + '. ' + lines[index].strip('\n') + filetype)  # 新的文件路径
+        frontIndex = int(oldDir.split('_')[-2])
+        newDir = os.path.join(path, str(frontIndex) + '. ' + lines[index].strip('\n') + filetype)  # 新的文件路径
+        index += 1
         os.rename(oldDir, newDir)  # 重命名
 
 

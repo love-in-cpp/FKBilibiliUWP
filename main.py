@@ -220,11 +220,16 @@ class MainApp(QMainWindow, Ui_MainWindow):
                     s += (item + '\n')
                 self.Log(s)
 
-                # 复制
+
 
                 if os.path.isdir(outputPath) is False:
                     self.Log('输出目录的路径存在非法输入！')
                 else:
+                    # 解密
+                    self.Log("开始解密...")
+                    FileOperator.DecryptMp4(downloadPath, dviInfoList[2])
+                    self.Log("解密完毕！")
+                    # 复制
                     self.CopyOrMove(self.isCopyOutput, mp4List, outputPath)
 
                     # 重命名
