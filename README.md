@@ -1,6 +1,6 @@
 FKBilibiliUWP
 =======================
-  `PYQT5` `BiliBiliUWP` `爬虫` `效率工具`   
+  `PYQT5` `BiliBili UWP` `爬虫` `效率工具`   
   
   基于爬虫（可选）、IO和PYQT5图形用户界面的bilibiliUWP视频`解密`+重命名+整理工具
 
