@@ -4,8 +4,13 @@ FKBilibiliUWP
   
   基于爬虫（可选）、IO和PYQT5图形用户界面的bilibiliUWP视频`解密`+重命名+整理工具
 
-`bilibiliUWP 2.14.79`官方最新版本和本工具、使用文档可直接点这里:[[天翼云链接]2.14.79版本+工具+文档 ](https://cloud.189.cn/web/share?code=mIjUZvzaeEzq "点击跳转")
-（访问码：8skf）
+`bilibiliUWP 2.14.79`官方最新版本和本工具、使用文档可直接点这里:   
+[[阿里云链接]工具+文档 ](https://www.aliyundrive.com/s/XjD25zFVRLa "点击跳转")   
+[[蓝奏云链接]工具+文档 ](https://wwb.lanzoul.com/b037845ud "点击跳转")（密码:51n7）  
+[[天翼云链接]2.14.79版本+工具+文档 ](https://cloud.189.cn/web/share?code=mIjUZvzaeEzq "点击跳转")（访问码：8skf）  
+
+
+
 ## 如何使用？
   [V4.0 使用文档.pdf](https://github.com/love-in-cpp/FKBilibiliUWP/files/9119462/V4.0.pdf)
 
