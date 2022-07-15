@@ -4,7 +4,7 @@ FKBilibiliUWP
   
   基于爬虫（可选）、IO和PYQT5图形用户界面的bilibiliUWP视频`解密`+重命名+整理工具
 
-没有`bilibiliUWP 2.14.71`版本的点这里:[[天翼云链接]2.14.71版本+工具 ](https://cloud.189.cn/web/share?code=RZBjeeqiQJBv "点击跳转")
+`bilibiliUWP 2.14.79`目前最新版本的官方包+工具+使用文档点这里:[[天翼云链接]2.14.71版本+工具 ](https://cloud.189.cn/web/share?code=RZBjeeqiQJBv "点击跳转")
 （访问码：ot1k）
 ## 如何使用？
   [使用文档.pdf](https://github.com/love-in-cpp/FKBilibiliUWP/files/8976604/default.pdf)
@@ -12,7 +12,7 @@ FKBilibiliUWP
 ## 未来工作 ~~***（可能）***~~
 
 * [x] 针对新版加密视频，推出`解密`后再输出的功能   (***状态：Done***) 
-* [ ] 增加记忆输出文件夹的功能，该功能将为**安装版专属**，因为绿色版执行结束后不会在用户不知情的情况下保留任何文件。
+* [x] 增加记忆输出文件夹的功能，该功能将为**安装版专属**，因为绿色版执行结束后不会在用户不知情的情况下保留任何文件。(***状态：Done***)
 * [x] 增加免除用户**手动选择输出文件夹**的功能  (***状态：Done***) 
 * [x] 增加**免网络**运行功能(~~虽然这个功能有写这个md的时间都能做完~~)  (***状态：Done***) 
 * [ ] 用 ``C#`` 实现，作为IO操作练手的项目
@@ -33,15 +33,4 @@ FKBilibiliUWP
 * `main.py` 用于处理UI的信号和槽以及多线程
 * `MainWindow.py` 负责部分固定UI的生成，该文件由 `pyuic5.exe` 作用在 `MainWindow.ui` 上生成
 * `icon.py` 由`icon2py.py` 作用在 `.icon`文件上生成
-  ```Python
-  # icon2py.py
-  import base64
-  
-  open_icon = open("FKBili.png", "rb")
-  b64str = base64.b64encode(open_icon.read())
-  open_icon.close()
-  write_data = write_data = "img = %s" % b64str
-  f = open("icon.py", "w+")
-  f.write(write_data)
-  f.close()
-  ```
+
