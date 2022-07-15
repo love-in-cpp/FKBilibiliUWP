@@ -248,9 +248,9 @@ class MainApp(QMainWindow, Ui_MainWindow):
                     self.Log("impossible")
 
                 # 找到所有downloadPath的.mp4文件
-                mp4List = FileOperator.FindAllMp4Files(downloadPath)[0]  # mp4真正在的地方
+                mp4List = FileOperator.FindSpecialMp4Files(downloadPath, dviInfoList[2])[0]  # mp4真正在的地方
                 # Log
-                mp4nameList = FileOperator.FindAllMp4Files(downloadPath)[1]
+                mp4nameList = FileOperator.FindSpecialMp4Files(downloadPath, dviInfoList[2])[1]
                 mp4nameList.sort(key=GetSeries)
                 s = "查询到以下mp4文件：\n"
                 for item in mp4nameList:
