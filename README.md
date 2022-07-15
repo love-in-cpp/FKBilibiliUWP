@@ -7,6 +7,7 @@ FKBilibiliUWP
 `bilibiliUWP 2.14.79`官方最新版本和本工具、使用文档可直接点这里:   
 [[阿里云链接]工具+文档 ](https://www.aliyundrive.com/s/XjD25zFVRLa "点击跳转")   
 [[蓝奏云链接]工具+文档 ](https://wwb.lanzoul.com/b037845ud "点击跳转")（密码:51n7）  
+[[百度云链接]2.14.79版本+工具+文档 ](https://pan.baidu.com/s/16oJzhc0kv9Z____DENFpRw?pwd=1111 "点击跳转")（提取码：1111）  
 [[天翼云链接]2.14.79版本+工具+文档 ](https://cloud.189.cn/web/share?code=mIjUZvzaeEzq "点击跳转")（访问码：8skf）  
 
 
