@@ -132,7 +132,7 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1045, 26))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1045, 25))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
 
@@ -154,7 +154,7 @@ class Ui_MainWindow(object):
 "</style></head><body style=\" font-family:\'微软雅黑\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">输出文件夹：</p></body></html>"))
         self.outputDirButton.setText(_translate("MainWindow", "..."))
-        self.renameButton.setText(_translate("MainWindow", "一键整理+重命名"))
+        self.renameButton.setText(_translate("MainWindow", "一键解密+整理+重命名"))
         self.copyToOutput.setText(_translate("MainWindow", "以复制文件的方式输出"))
         self.txtFileCheckBox.setText(_translate("MainWindow", "保存.txt文件"))
         self.activityLabel.setText(_translate("MainWindow", "活动日志"))

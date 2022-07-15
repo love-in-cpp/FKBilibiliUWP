@@ -143,7 +143,7 @@ p, li { white-space: pre-wrap; }
      </font>
     </property>
     <property name="text">
-     <string>一键整理+重命名</string>
+     <string>一键解密+整理+重命名</string>
     </property>
    </widget>
    <widget class="QCheckBox" name="copyToOutput">
@@ -343,7 +343,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>1045</width>
-     <height>26</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>
