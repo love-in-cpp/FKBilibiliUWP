@@ -234,3 +234,37 @@ def MakeDir(path, name):
         os.makedirs(dir)
 
     return dir
+
+
+'''
+FileOperator 新增
+'''
+
+
+# 创建记忆文件
+def SaveForOutput(path, fileName):
+    # fileName = "localPath.config"
+    fullpath = os.path.join(path, fileName)
+    if not os.path.exists(fullpath):  # 如果路径不存在，创建路径，写入文件，返回False
+        file = open(fileName, "w", encoding="utf-8")
+        file.close()
+        return False
+    else:
+        return True
+
+
+# 读文件的内容 这里的path是已经join过的
+def ReadForOutput(path):
+    lines = ['', '']
+    if os.path.isfile(path):
+        with open(path, encoding='UTF-8') as f:
+            lines = f.readlines()  # 新文件名按行保存
+            f.close()
+    return lines
+
+
+# 写入首行的内容
+def WriteForOutput(path, downloadPath, outputPath):
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(downloadPath+'\n')
+        f.write(outputPath)
