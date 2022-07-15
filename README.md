@@ -4,15 +4,21 @@ FKBilibiliUWP
   
   基于爬虫（可选）、IO和PYQT5图形用户界面的bilibiliUWP视频`解密`+重命名+整理工具
 
-`bilibiliUWP 2.14.79`目前最新版本的官方包+工具+使用文档点这里:[[天翼云链接]2.14.71版本+工具 ](https://cloud.189.cn/web/share?code=RZBjeeqiQJBv "点击跳转")
-（访问码：ot1k）
+`bilibiliUWP 2.14.79`官方最新版本和本工具、使用文档可直接点这里:   
+[[阿里云链接]工具+文档 ](https://www.aliyundrive.com/s/XjD25zFVRLa "点击跳转")   
+[[蓝奏云链接]工具+文档 ](https://wwb.lanzoul.com/b037845ud "点击跳转")（密码:51n7）  
+[[百度云链接]2.14.79版本+工具+文档 ](https://pan.baidu.com/s/16oJzhc0kv9Z____DENFpRw?pwd=1111 "点击跳转")（提取码：1111）  
+[[天翼云链接]2.14.79版本+工具+文档 ](https://cloud.189.cn/web/share?code=mIjUZvzaeEzq "点击跳转")（访问码：8skf）  
+
+
+
 ## 如何使用？
-  [使用文档.pdf](https://github.com/love-in-cpp/FKBilibiliUWP/files/8976604/default.pdf)
+  [V4.0 使用文档.pdf](https://github.com/love-in-cpp/FKBilibiliUWP/files/9119462/V4.0.pdf)
 
 ## 未来工作 ~~***（可能）***~~
 
 * [x] 针对新版加密视频，推出`解密`后再输出的功能   (***状态：Done***) 
-* [x] 增加记忆输出文件夹的功能，该功能将为**安装版专属**，因为绿色版执行结束后不会在用户不知情的情况下保留任何文件。(***状态：Done***)
+* [x] 增加记忆输出文件夹的功能，该功能将为**安装版专属**，因为绿色版执行结束后不会在用户不知情的情况下保留任何文件。(***状态：Done***) 
 * [x] 增加免除用户**手动选择输出文件夹**的功能  (***状态：Done***) 
 * [x] 增加**免网络**运行功能(~~虽然这个功能有写这个md的时间都能做完~~)  (***状态：Done***) 
 * [ ] 用 ``C#`` 实现，作为IO操作练手的项目
@@ -33,4 +39,3 @@ FKBilibiliUWP
 * `main.py` 用于处理UI的信号和槽以及多线程
 * `MainWindow.py` 负责部分固定UI的生成，该文件由 `pyuic5.exe` 作用在 `MainWindow.ui` 上生成
 * `icon.py` 由`icon2py.py` 作用在 `.icon`文件上生成
-
