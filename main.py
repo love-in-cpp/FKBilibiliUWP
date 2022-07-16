@@ -2,6 +2,8 @@ import base64
 import datetime
 import os
 import threading
+
+from PyQt5 import QtCore
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 import FileOperator
@@ -313,6 +315,8 @@ class MainApp(QMainWindow, Ui_MainWindow):
 
 
 if __name__ == '__main__':
+    QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
+
     app = QApplication([])
     window = MainApp()
     window.show()
