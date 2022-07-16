@@ -149,7 +149,7 @@ def GetSeries(dataList):
     return int(dataList.split('_')[-2])
 
 
-def DoRename(path, fileName, aID):
+def DoRename(path, fileName, aID, isLocalPattern):
     # 获取.txt文件名
     filName = fileName
     # 读取.txt文件
@@ -165,8 +165,12 @@ def DoRename(path, fileName, aID):
     for oldDir in fileList:
         filetype = '.' + oldDir.split('.')[-1]
         frontIndex = int(oldDir.split('_')[-2])
-        newDir = os.path.join(path, str(frontIndex) + '. ' + lines[index].strip('\n') + filetype)  # 新的文件路径
-        index += 1
+        if isLocalPattern:
+            newDir = os.path.join(path, str(frontIndex) + '. ' + lines[index].strip('\n') + filetype)  # 新的文件路径
+            index += 1
+        else:
+            newDir = os.path.join(path, str(frontIndex) + '. ' + lines[frontIndex-1].strip('\n') + filetype)  # 新的文件路径
+
         os.rename(oldDir, newDir)  # 重命名
 
 

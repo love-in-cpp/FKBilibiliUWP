@@ -273,7 +273,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
 
                     # 重命名
                     self.Log("开始重命名...")
-                    FileOperator.DoRename(outputPath, fileName, dviInfoList[2])
+                    FileOperator.DoRename(outputPath, fileName, dviInfoList[2], self.isLocalMode)
                     self.Log("重命名完毕！")
 
                     # 进度条100％
