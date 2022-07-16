@@ -7,6 +7,7 @@ import os
 import random
 import re
 import shutil
+import stat
 
 '''
 传入path值，读取当前path一级目录下的.dvi文件，返回[isDviFounded,bid,aid,title]列表
@@ -219,9 +220,15 @@ def DeleteTxt(delDir, delName):
 
 def DeleteDir(delDir):
     # 文件夹 带 - 的会删不掉，但是文件还是删的掉的
-    os.system(f"attrib -r {delDir}")  # 增加可对文件夹产生修改的权限
-    shutil.rmtree(delDir, True)
+    #　os.system(f"attrib -r {delDir}")  # 增加可对文件夹产生修改的权限
+    # shutil.rmtree(delDir, True)
+    if os.path.exists(delDir):
+        shutil.rmtree(delDir, onerror=readonly_handler)
 
+
+def readonly_handler(func, path, execinfo):
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
 
 # 在指定的输出文件夹下面创建名称为name的文件夹
 def MakeDir(path, name):
