@@ -179,7 +179,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.setWindowIcon(icon)
 
     def ShowAboutDialog(self):
-        about_text = "<p>描述：这是一款致力于解决BiliBili UWP版下载后的视频加密、命名信息丢失和存放位置不合理等痛点的软件</p><p>版本：4.0</p><p>@Author：LZY</p><p>@github：love" \
+        about_text = "<p>描述：这是一款致力于解决BiliBili UWP版下载后的视频加密、命名信息丢失和存放位置不合理等痛点的软件</p><p>版本：4.3</p><p>@Author：LZY</p><p>@github：love" \
                      "-in-cpp</p> "
         QMessageBox.about(self, '说明', about_text)
 
