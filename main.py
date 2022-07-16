@@ -49,11 +49,11 @@ class MainApp(QMainWindow, Ui_MainWindow):
             if len(self.lines) >= 2:
                 if self.lines[0] != '':
                     if os.path.isdir(self.lines[0].strip()):
-                        self.downloadDirEdit.setText(self.lines[0])
+                        self.downloadDirEdit.setText(self.lines[0].strip())
                         self.isTextFirstColumnHaveContent = True
                 if self.lines[1] != '':
                     if os.path.isdir(self.lines[1].strip()):
-                        self.outputDirEdit.setText(self.lines[1])
+                        self.outputDirEdit.setText(self.lines[1].strip())
                         self.isTextSecondColumnHaveContent = True
 
             else:
