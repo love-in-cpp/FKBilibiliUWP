@@ -37,7 +37,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.isTextFileExists = False
         self.isTextFirstColumnHaveContent = False
         self.isTextSecondColumnHaveContent = False
-        # self.InitOutPutPath() # 发布绿色版时注释
+        self.InitOutPutPath() # 发布绿色版时注释
 
     def InitOutPutPath(self):
         self.isTextFileExists = FileOperator.SaveForOutput(self.path, self.saveName)
@@ -263,7 +263,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
                     self.Log('输出目录的路径存在非法输入！')
                 else:
                     # 记忆输出目录
-                    #　FileOperator.WriteForOutput(self.joinedPath, os.path.dirname(downloadPath), self.outputDirEdit.toPlainText()) # 发布绿色版时注释
+                    FileOperator.WriteForOutput(self.joinedPath, os.path.dirname(downloadPath), self.outputDirEdit.toPlainText()) # 发布绿色版时注释
                     # 解密
                     self.Log("开始解密...")
                     FileOperator.DecryptMp4(downloadPath, dviInfoList[2])
