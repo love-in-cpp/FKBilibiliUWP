@@ -12,7 +12,8 @@ FKBilibiliUWP
 
 
 ## 如何使用？
-  [V4.0 使用文档.pdf](https://github.com/love-in-cpp/FKBilibiliUWP/files/9119462/V4.0.pdf)
+[V4.3 使用文档.pdf](https://github.com/love-in-cpp/FKBilibiliUWP/files/9169876/V4.3.pdf)
+
 
 ## 未来工作
 
