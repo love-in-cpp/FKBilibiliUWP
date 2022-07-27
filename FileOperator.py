@@ -255,6 +255,7 @@ FileOperator 新增
 # 创建记忆文件
 def SaveForOutput(path, fileName):
     # fileName = "localPath.config"
+    file = None
     fullpath = os.path.join(path, fileName)
     if not os.path.exists(fullpath):  # 如果路径不存在，创建路径，写入文件，返回False
         try:
@@ -281,6 +282,7 @@ def ReadForOutput(path):
 
 # 写入首行的内容
 def WriteForOutput(path, downloadPath, outputPath):
+    f = None
     try:
         f = open(path, "w", encoding="utf-8")
         f.write(downloadPath + '\n')

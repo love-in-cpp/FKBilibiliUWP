@@ -12,7 +12,7 @@ from MainWindow import Ui_MainWindow
 from icon import img
 import TitleSpider
 
-
+global canRun
 def GetSeries(dataList):
     return int(dataList.split('_')[1])
 
@@ -20,13 +20,18 @@ def GetSeries(dataList):
 class MainApp(QMainWindow, Ui_MainWindow):
 
     def __init__(self):
+        global canRun
         QMainWindow.__init__(self)
+        if not self.SetUI():
+            canRun = False
+            return
+        else:
+            canRun = True
         self.setupUi(self)
 
         self.SetBaseInfo()
         self.InitMenuBar()
         self.HandleButtons()
-        self.SetUI()
         self.setFixedSize(self.width(), self.height())
         self.SetLogText()
         self.progressBar.setValue(0)
@@ -38,6 +43,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.isTextFirstColumnHaveContent = False
         self.isTextSecondColumnHaveContent = False
         self.InitOutPutPath() # 发布绿色版时注释
+
 
     def InitOutPutPath(self):
         self.isTextFileExists = FileOperator.SaveForOutput(self.path, self.saveName)
@@ -171,17 +177,20 @@ class MainApp(QMainWindow, Ui_MainWindow):
 
     # 设置UI
     def SetUI(self):
-        tmp = open('tmp.png', "wb+")
+        tmp = None
         try:
+            tmp = open('tmp.png', "wb+")
             tmp.write(base64.b64decode(img))
         except Exception as e:
-            QMessageBox.critical(self, "错误", "请关闭本程序并使用管理员权限运行本软件！或卸载本软件再重新安装至其它非系统盘 比如：D盘、E盘！" + str(e))
-            return
-
-        tmp.close()
+            QMessageBox.critical(self, "错误", "您当前安装在了C盘，软件权限不足：\n解决方案一：请关闭本程序并每次使用管理员权限运行本软件 \n解决方案二：卸载本软件再重新安装至其它非系统盘 比如：D盘、E盘！")
+            return False
+        finally:
+            if tmp:
+                tmp.close()
         icon = QIcon('tmp.png')
         os.remove("tmp.png")
         self.setWindowIcon(icon)
+        return True
 
     def ShowAboutDialog(self):
         about_text = "<p>描述：这是一款致力于解决BiliBili UWP版下载后的视频加密、命名信息丢失和存放位置不合理等痛点的软件</p><p>版本：4.4</p><p>@Author：LZY</p><p>@github：love" \
@@ -330,5 +339,7 @@ if __name__ == '__main__':
 
     app = QApplication([])
     window = MainApp()
-    window.show()
-    app.exec_()
+    if canRun:
+        window.show()
+        app.exec_()
+
