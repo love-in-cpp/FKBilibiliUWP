@@ -184,7 +184,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.setWindowIcon(icon)
 
     def ShowAboutDialog(self):
-        about_text = "<p>描述：这是一款致力于解决BiliBili UWP版下载后的视频加密、命名信息丢失和存放位置不合理等痛点的软件</p><p>版本：4.3</p><p>@Author：LZY</p><p>@github：love" \
+        about_text = "<p>描述：这是一款致力于解决BiliBili UWP版下载后的视频加密、命名信息丢失和存放位置不合理等痛点的软件</p><p>版本：4.4</p><p>@Author：LZY</p><p>@github：love" \
                      "-in-cpp</p> "
         QMessageBox.about(self, '说明', about_text)
 
@@ -205,7 +205,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
             self.outputDirEdit.setText(dName)
 
     def SetBaseInfo(self):
-        self.setWindowTitle('BiliBili UWP版视频下载整理工具')
+        self.setWindowTitle('BiliBili UWP版视频解密整理工具')
         self.downloadDirEdit.setToolTip(r"例如：E:\BiliDownload\44938322")
         self.downloadDirEdit.setPlaceholderText("路径请具体到单个数字名称的文件夹，暂不支持文件夹的批量处理")
         self.outputDirEdit.setPlaceholderText("您希望处理后的文件被保存到的地方")
