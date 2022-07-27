@@ -172,7 +172,12 @@ class MainApp(QMainWindow, Ui_MainWindow):
     # 设置UI
     def SetUI(self):
         tmp = open('tmp.png', "wb+")
-        tmp.write(base64.b64decode(img))
+        try:
+            tmp.write(base64.b64decode(img))
+        except Exception as e:
+            QMessageBox.critical(self, "错误", "请关闭本程序并使用管理员权限运行本软件！或卸载本软件再重新安装至其它非系统盘 比如：D盘、E盘！" + str(e))
+            return
+
         tmp.close()
         icon = QIcon('tmp.png')
         os.remove("tmp.png")
@@ -228,6 +233,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
                     outputPath = FileOperator.MakeDir(outputPath, dviInfoList[3])
                 except Exception as e:
                     QMessageBox.critical(self, "错误", "已经存在同名文件夹！ Error：" + str(e))
+                    return
 
                 if self.isSpiderMode:
                     self.Log("开始爬取BV:{0}, 标题:{1} 的所有视频标题,请稍后...".format(dviInfoList[1], dviInfoList[3]))
@@ -235,6 +241,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
                         TitleSpider.GetTxt(dviInfoList[1], outputPath)
                     except Exception as e:
                         QMessageBox.critical(self, "错误", "请检查网络后重试 Error：" + str(e))
+                        return
                     # 调用爬虫产生.txt
                     global fileName
                     fileName = TitleSpider.fileName
@@ -253,7 +260,11 @@ class MainApp(QMainWindow, Ui_MainWindow):
                 mp4List = FileOperator.FindSpecialMp4Files(downloadPath, dviInfoList[2])[0]  # mp4真正在的地方
                 # Log
                 mp4nameList = FileOperator.FindSpecialMp4Files(downloadPath, dviInfoList[2])[1]
-                mp4nameList.sort(key=GetSeries)
+                try:
+                    mp4nameList.sort(key=GetSeries)
+                except Exception as e:
+                    QMessageBox.critical(self, "错误", "存在干扰文件！排序错误，请联系作者！" + str(e))
+                    return
                 s = "查询到以下mp4文件：\n"
                 for item in mp4nameList:
                     s += (item + '\n')

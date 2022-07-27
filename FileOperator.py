@@ -257,8 +257,13 @@ def SaveForOutput(path, fileName):
     # fileName = "localPath.config"
     fullpath = os.path.join(path, fileName)
     if not os.path.exists(fullpath):  # 如果路径不存在，创建路径，写入文件，返回False
-        file = open(fileName, "w", encoding="utf-8")
-        file.close()
+        try:
+            file = open(fileName, "w", encoding="utf-8")
+        except:
+            return
+        finally:
+            if file:
+                file.close()
         return False
     else:
         return True
@@ -276,6 +281,16 @@ def ReadForOutput(path):
 
 # 写入首行的内容
 def WriteForOutput(path, downloadPath, outputPath):
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(downloadPath+'\n')
+    try:
+        f = open(path, "w", encoding="utf-8")
+        f.write(downloadPath + '\n')
         f.write(outputPath)
+    except:
+        return
+    finally:
+        if f:
+            f.close()
+    # with open(path, "w", encoding="utf-8") as f:
+    #     f.write(downloadPath+'\n')
+    #     f.write(outputPath)
+
