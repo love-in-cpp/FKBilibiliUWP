@@ -98,30 +98,30 @@ def DecryptMp4(path, aID):
     countDecChar = 0  # 检测'x00'数量
 
     fileList = FindSpecialMp4Files(path, aID)[0]
+    for file in fileList:
+        with open(file, "rb") as f:
+            s = str(f.readline())[3:14]
+        f.close()
+        sList = s.split('\\')  # ['xff', 'xff', 'xff']
+        for item in sList:
+            if 'xff' in item:
+                countEncChar += 1
+            if 'x00' in item:
+                countDecChar += 1
 
-    testFile = fileList[0]
-    with open(testFile, "rb") as f:
-        s = str(f.readline())[3:14]
-    f.close()
-    sList = s.split('\\')  # ['xff', 'xff', 'xff']
-    for item in sList:
-        if 'xff' in item:
-            countEncChar += 1
-        if 'x00' in item:
-            countDecChar += 1
+        if countEncChar == 3:
+            isEncrypted = True  # 加密
+        if countDecChar == 3:
+            isEncrypted = False  # 未加密
 
-    if countEncChar == 3:
-        isEncrypted = True  # 加密
-    if countDecChar == 3:
-        isEncrypted = False  # 未加密
+        countEncChar = 0
+        countDecChar = 0
+        if isEncrypted is None:
+            return
 
-    if isEncrypted is None:
-        return
-
-    if not isEncrypted:  # 如果未加密
-        pass
-    else:  # 如果加密则解密
-        for file in fileList:
+        if not isEncrypted:  # 如果未加密
+            pass
+        else:  # 如果加密则解密
             encryptedFile = open(file, 'rb')
             encryptedFile.seek(3)
             byte = encryptedFile.read()
@@ -129,8 +129,8 @@ def DecryptMp4(path, aID):
             with open(file, 'wb') as decryptedFile:
                 decryptedFile.write(byte)
 
-        encryptedFile.close()
-        decryptedFile.close()
+            encryptedFile.close()
+            decryptedFile.close()
 
 
 # return fileList
@@ -165,6 +165,7 @@ def DoRename(path, fileName, aID, isLocalPattern):
     for oldDir in fileList:
         filetype = '.' + oldDir.split('.')[-1]
         frontIndex = int(oldDir.split('_')[-2])
+
         if isLocalPattern:
             newDir = os.path.join(path, str(frontIndex) + '. ' + lines[index].strip('\n') + filetype)  # 新的文件路径
             index += 1
@@ -197,7 +198,12 @@ def GetLocalVideoTitle(path, aID):
             lines = f.readlines()
             s = str(lines[0])
             videoTitle = re.findall(findVideoTitle, s)[0]
+            for s in videoTitle:
+                cut = ['|', '\\', '/', ':', '?', '"', '<', '>']
+                if s in cut:
+                    videoTitle = videoTitle.replace(s, ' ')
             titleList.append(videoTitle)
+
     return titleList
 
 

@@ -42,7 +42,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.isTextFileExists = False
         self.isTextFirstColumnHaveContent = False
         self.isTextSecondColumnHaveContent = False
-        self.InitOutPutPath() # 发布绿色版时注释
+       #  self.InitOutPutPath() # 发布绿色版时注释
 
 
     def InitOutPutPath(self):
@@ -193,7 +193,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
         return True
 
     def ShowAboutDialog(self):
-        about_text = "<p>描述：这是一款致力于解决BiliBili UWP版下载后的视频加密、命名信息丢失和存放位置不合理等痛点的软件</p><p>版本：4.4</p><p>@Author：LZY</p><p>@github：love" \
+        about_text = "<p>描述：这是一款致力于解决BiliBili UWP版下载后的视频加密、命名信息丢失和存放位置不合理等痛点的软件</p><p>版本：4.5</p><p>@Author：LZY</p><p>@github：love" \
                      "-in-cpp</p> "
         QMessageBox.about(self, '说明', about_text)
 
@@ -283,7 +283,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
                     self.Log('输出目录的路径存在非法输入！')
                 else:
                     # 记忆输出目录
-                    FileOperator.WriteForOutput(self.joinedPath, os.path.dirname(downloadPath), self.outputDirEdit.toPlainText()) # 发布绿色版时注释
+                    # FileOperator.WriteForOutput(self.joinedPath, os.path.dirname(downloadPath), self.outputDirEdit.toPlainText()) # 发布绿色版时注释
                     # 解密
                     self.Log("开始解密...")
                     FileOperator.DecryptMp4(downloadPath, dviInfoList[2])
