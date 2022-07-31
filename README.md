@@ -12,7 +12,7 @@ FKBilibiliUWP
 
 
 ## 如何使用？
-[V4.3 使用文档.pdf](https://github.com/love-in-cpp/FKBilibiliUWP/files/9169876/V4.3.pdf)
+[V4.4 使用文档（高清版）.pdf](https://github.com/love-in-cpp/FKBilibiliUWP/files/9201187/V4.4.pdf)
 
 
 ## 未来工作
@@ -21,7 +21,7 @@ FKBilibiliUWP
 * [x] 增加记忆输出文件夹的功能，该功能将为**安装版专属**，因为绿色版执行结束后不会在用户不知情的情况下保留任何文件。(***状态：Done***) 
 * [x] 增加免除用户**手动选择输出文件夹**的功能  (***状态：Done***) 
 * [x] 增加**免网络**运行功能(~~虽然这个功能有写这个md的时间都能做完~~)  (***状态：Done***) 
-* [ ] 用 ``C#`` 实现，作为IO操作练手的项目
+* [ ] 有空学了python的面向对象后，运用设计模式重构代码
 
 ## 界面截图
 ![img](https://user-images.githubusercontent.com/59083942/175548393-19469586-5fbb-4db7-9fd8-0682a568f52a.png)
