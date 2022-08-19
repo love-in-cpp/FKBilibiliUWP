@@ -79,7 +79,7 @@ class Ui_MainWindow(object):
         self.activityLogEdit.setGeometry(QtCore.QRect(780, 30, 251, 231))
         font = QtGui.QFont()
         font.setFamily("阿里巴巴普惠体 R")
-        font.setPointSize(7)
+        font.setPointSize(10)
         font.setBold(False)
         font.setWeight(50)
         self.activityLogEdit.setFont(font)
@@ -132,7 +132,7 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1045, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1045, 23))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
 
