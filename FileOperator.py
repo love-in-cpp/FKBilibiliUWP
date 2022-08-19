@@ -38,7 +38,7 @@ def GetDviInfo(path):
             s = str(lines[0])
 
             findBid = re.compile(r'"Bid":"(.*?)"')
-            findDviTitle = re.compile(r'"Title":"(.*?)"')
+            findDviTitle = re.compile(r'"Title":"(.*?)",')
             findAid = re.compile(r'"Aid":"(.*?)"')
 
             bid = re.findall(findBid, s)[0]
