@@ -43,8 +43,9 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.isTextFirstColumnHaveContent = False
         self.isTextSecondColumnHaveContent = False
        #  self.InitOutPutPath() # 发布绿色版时注释
-
-
+        self.Log(
+        "欢迎使用本工具，本工具发布于B站@落点dev。\n温馨提示：\n使用程序处理5GB以上的文件夹，出现未响应是正常现象。响应时间和硬盘读写速度挂钩，请耐心等待程序响应即可。\n\n"
+        "期间你可以打开输出目录以观察处理进度，程序出现其它问题可以b站评论区评论或私信，如需快速回复可联系qq：3152319989")
     def InitOutPutPath(self):
         self.isTextFileExists = FileOperator.SaveForOutput(self.path, self.saveName)
         if self.isTextFileExists is False:  # 如果没有文件，在已经创建文件的前提下，等待用户输入手动填入OutputText. 相关事件在button事件实现
@@ -234,7 +235,10 @@ class MainApp(QMainWindow, Ui_MainWindow):
             self.Log("进入目录：{0}".format(downloadPath))
             dviInfoList = FileOperator.GetDviInfo(downloadPath)  # 获取dvi文件信息
             if dviInfoList[0] is False:
-                self.Log('没有找到.dvi文件！请检查下载目录后重试！')
+                self.Log(
+                    '没有找到.dvi文件！请检查下载目录后重试！请确保使用的是「bilibili '
+                    'uwp客户端」下载的视频而非「桌面客户端」或其它客户端，请谨慎甄别，本工具不能处理其他客户端下载的视频；如果确认使用的是uwp客户端下载的视频，请仔细查看视频 1分20秒 '
+                    '「选择下载目录」的片段')
 
             else:
                 # 在outputDir下新建名为dvi[3]文件夹
