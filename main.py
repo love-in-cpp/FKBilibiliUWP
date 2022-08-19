@@ -4,6 +4,7 @@ import os
 import threading
 
 from PyQt5 import QtCore
+from PyQt5.QtCore import QBasicTimer
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 import FileOperator
@@ -13,6 +14,8 @@ from icon import img
 import TitleSpider
 
 global canRun
+
+
 def GetSeries(dataList):
     return int(dataList.split('_')[1])
 
@@ -28,13 +31,12 @@ class MainApp(QMainWindow, Ui_MainWindow):
         else:
             canRun = True
         self.setupUi(self)
-
         self.SetBaseInfo()
         self.InitMenuBar()
         self.HandleButtons()
         self.setFixedSize(self.width(), self.height())
         self.SetLogText()
-        self.progressBar.setValue(0)
+        self.SetProgressBar()
         self.InitCheckBox()
         self.path = os.getcwd()
         self.saveName = "set.ini"
@@ -42,7 +44,13 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.isTextFileExists = False
         self.isTextFirstColumnHaveContent = False
         self.isTextSecondColumnHaveContent = False
-       #  self.InitOutPutPath() # 发布绿色版时注释
+        self.Log(
+            "欢迎使用本工具，本工具发布于B站@落点dev。\n温馨提示：\n使用程序处理5GB以上的文件夹，出现未响应是正常现象。响应时间和硬盘读写速度挂钩，请耐心等待程序响应即可。\n\n期间你可以打开输出目录以观察处理进度，程序出现其它问题可以b站评论区评论或私信，如需快速回复可联系qq：3152319989")
+        self.InitOutPutPath()  # 发布绿色版时注释
+
+    def SetProgressBar(self):
+        self.progressBar.setRange(0, 10)
+        self.progressBar.setValue(0)
 
 
     def InitOutPutPath(self):
@@ -93,12 +101,16 @@ class MainApp(QMainWindow, Ui_MainWindow):
         if self.copyToOutput.isChecked() or self.moveToOutput.isChecked():
             pass
         else:
-            QMessageBox.critical(self, "错误", "请至少勾选一种输出方式！")
+            self.Log("错误：请至少勾选一种输出方式！")
+            return False
+            # QMessageBox.critical(self, "错误", "请至少勾选一种输出方式！")
 
         if self.localMode.isChecked() or self.spiderMode.isChecked():
             pass
         else:
-            QMessageBox.critical(self, "错误", "请至少勾选一种处理模式（本地模式 或 爬虫模式）！")
+            self.Log("错误：请至少勾选一种处理模式（本地模式 或 爬虫模式）！")
+            return False
+            # QMessageBox.critical(self, "错误", "请至少勾选一种处理模式（本地模式 或 爬虫模式）！")
 
         if self.copyToOutput.isChecked():
             self.isCopyOutput = True
@@ -116,10 +128,13 @@ class MainApp(QMainWindow, Ui_MainWindow):
             self.isLocalMode = False
 
         if self.spiderMode.isChecked():
-            QMessageBox.warning(self, "警告", "爬虫模式依赖网络，关闭本窗口前请确保代理服务是关闭状态")
+            self.Log("警告：" + "爬虫模式依赖网络，代理模式下程序不会正常运行")
+            # QMessageBox.warning(self, "警告", "爬虫模式依赖网络，关闭本窗口前请确保代理服务是关闭状态")
             self.isSpiderMode = True
         else:
             self.isSpiderMode = False
+
+        return True
 
     def SetLogText(self):
         self.activityLogEdit.setReadOnly(True)
@@ -129,6 +144,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.activityLogEdit.appendPlainText('[{0}]'.format(str(datetime.datetime.now())[0:19]))
         self.activityLogEdit.appendPlainText(msg)
         self.activityLogEdit.appendPlainText('')
+        self.activityLogEdit.moveCursor(QTextCursor.End)
 
     def LogOnBar(self, msg):
         self.statusbar.showMessage(msg)
@@ -136,12 +152,18 @@ class MainApp(QMainWindow, Ui_MainWindow):
     def HandleButtons(self):
         self.downloadDirButton.clicked.connect(self.OpenDownloadDir)
         self.outputDirButton.clicked.connect(self.OpenOutputDir)
-        self.renameButton.clicked.connect(self.RenameFile)
+        self.renameButton.clicked.connect(self.MutiThreadRenameFile)  # 多线程会导致 newMessageBox 的提示无法正常弹出
+        # self.renameButton.clicked.connect(self.RenameFile)
 
         self.copyToOutput.clicked.connect(self.DisableMove)
         self.moveToOutput.clicked.connect(self.DisableCopy)
         self.localMode.clicked.connect(self.DisableSpiderMode)
         self.spiderMode.clicked.connect(self.DisableLocalMode)
+
+    def MutiThreadRenameFile(self):
+        t = threading.Thread(target=self.RenameFile)
+        t.start()
+        t.join()
 
     # 处理checkbox冲突
     def DisableCopy(self):
@@ -182,7 +204,9 @@ class MainApp(QMainWindow, Ui_MainWindow):
             tmp = open('tmp.png', "wb+")
             tmp.write(base64.b64decode(img))
         except Exception as e:
-            QMessageBox.critical(self, "错误", "您当前安装在了C盘，软件权限不足：\n解决方案一：请关闭本程序并每次使用管理员权限运行本软件 \n解决方案二：卸载本软件再重新安装至其它非系统盘 比如：D盘、E盘！")
+            # self.Log("错误："+"您当前安装在了C盘，软件权限不足：\n解决方案一：请关闭本程序并每次使用管理员权限运行本软件 \n解决方案二：卸载本软件再重新安装至其它非系统盘 比如：D盘、E盘！")
+            QMessageBox.critical(self, "错误",
+                                 "您当前安装在了C盘，软件权限不足：\n解决方案一：请关闭本程序并每次使用管理员权限运行本软件 \n解决方案二：卸载本软件再重新安装至其它非系统盘 比如：D盘、E盘！")
             return False
         finally:
             if tmp:
@@ -222,7 +246,8 @@ class MainApp(QMainWindow, Ui_MainWindow):
     # def FindFiles(self,downloadPath):
 
     def RenameFile(self):
-        self.CheckIsChecked()
+        if self.CheckIsChecked() is False:
+            return
         self.progressBar.setValue(0)
         # 进入目录查找dvi文件
         downloadPath = self.downloadDirEdit.toPlainText()
@@ -234,34 +259,43 @@ class MainApp(QMainWindow, Ui_MainWindow):
             self.Log("进入目录：{0}".format(downloadPath))
             dviInfoList = FileOperator.GetDviInfo(downloadPath)  # 获取dvi文件信息
             if dviInfoList[0] is False:
-                self.Log('没有找到.dvi文件！请检查下载目录后重试！')
+                self.Log(
+                    '没有找到.dvi文件！请检查下载目录后重试！请确保使用的是「bilibili uwp客户端」下载的视频而非「桌面客户端」或其它客户端，请谨慎甄别，本工具不能处理其他客户端下载的视频；如果确认使用的是uwp客户端下载的视频，请仔细查看视频 1分20秒 「选择下载目录」的片段')
 
             else:
                 # 在outputDir下新建名为dvi[3]文件夹
                 try:
                     outputPath = FileOperator.MakeDir(outputPath, dviInfoList[3])
                 except Exception as e:
-                    QMessageBox.critical(self, "错误", "已经存在同名文件夹！ Error：" + str(e))
+                    self.Log("错误" + "已经存在同名文件夹！ Error：" + str(e))
+                    # QMessageBox.critical(self, "错误", "已经存在同名文件夹！ Error：" + str(e))
                     return
 
                 if self.isSpiderMode:
                     self.Log("开始爬取BV:{0}, 标题:{1} 的所有视频标题,请稍后...".format(dviInfoList[1], dviInfoList[3]))
+                    self.progressBar.setValue(1)
                     try:
                         TitleSpider.GetTxt(dviInfoList[1], outputPath)
                     except Exception as e:
-                        QMessageBox.critical(self, "错误", "请检查网络后重试 Error：" + str(e))
+                        self.Log("错误" + "请检查网络后重试 Error：" + str(e))
+                        self.progressBar.setValue(0)
+                        # QMessageBox.critical(self, "错误", "请检查网络后重试 Error：" + str(e))
                         return
                     # 调用爬虫产生.txt
                     global fileName
                     fileName = TitleSpider.fileName
                     self.LogOnBar('已成功爬取文件:  {0} ！  注：只显示部分文件名'.format(fileName[0:35]))
                     self.Log('已成功爬取文件:  {0} ！'.format(fileName))
+                    self.progressBar.setValue(2)
 
                 elif self.isLocalMode:
                     self.Log("开始遍历获取BV:{0}, 标题:{1} 的所有视频标题,请稍后...".format(dviInfoList[1], dviInfoList[3]))
                     localVideoTitleList = FileOperator.GetLocalVideoTitle(downloadPath, dviInfoList[2])
                     fileName = FileOperator.GetTxt(localVideoTitleList, dviInfoList[3], outputPath)
+                    self.progressBar.setValue(1)
                     self.Log('已成功获取文件:  {0} ！'.format(fileName))
+                    self.progressBar.setValue(2)
+
                 else:
                     self.Log("impossible")
 
@@ -272,32 +306,42 @@ class MainApp(QMainWindow, Ui_MainWindow):
                 try:
                     mp4nameList.sort(key=GetSeries)
                 except Exception as e:
-                    QMessageBox.critical(self, "错误", "存在干扰文件！排序错误，请联系作者！" + str(e))
+                    self.Log("错误" + "存在干扰文件！排序错误，请联系作者！" + str(e))
+                    self.progressBar.setValue(0)
+                    # QMessageBox.critical(self, "错误", "存在干扰文件！排序错误，请联系作者！" + str(e))
                     return
                 s = "查询到以下mp4文件：\n"
                 for item in mp4nameList:
                     s += (item + '\n')
                 self.Log(s)
+                self.progressBar.setValue(3)
 
-                if os.path.isdir(outputPath) is False or os.path.isdir(self.outputDirEdit.toPlainText().strip()) is False:
+                if os.path.isdir(outputPath) is False or os.path.isdir(
+                        self.outputDirEdit.toPlainText().strip()) is False:
                     self.Log('输出目录的路径存在非法输入！')
+                    self.progressBar.setValue(0)
                 else:
                     # 记忆输出目录
-                    # FileOperator.WriteForOutput(self.joinedPath, os.path.dirname(downloadPath), self.outputDirEdit.toPlainText()) # 发布绿色版时注释
+                    FileOperator.WriteForOutput(self.joinedPath, os.path.dirname(downloadPath),
+                                                self.outputDirEdit.toPlainText())  # 发布绿色版时注释
                     # 解密
                     self.Log("开始解密...")
                     FileOperator.DecryptMp4(downloadPath, dviInfoList[2])
+                    self.progressBar.setValue(4)
                     self.Log("解密完毕！")
+                    self.progressBar.setValue(5)
                     # 复制
                     self.CopyOrMove(self.isCopyOutput, mp4List, outputPath)
 
                     # 重命名
                     self.Log("开始重命名...")
+                    self.progressBar.setValue(9)
                     FileOperator.DoRename(outputPath, fileName, dviInfoList[2], self.isLocalMode)
                     self.Log("重命名完毕！")
+                    self.progressBar.setValue(10)
 
                     # 进度条100％
-                    self.progressBar.setValue(100)
+                    # self.progressBar.setValue(100)
                     # 是否保存.txt文件
                     if self.isSaveTxt is True:
                         pass
@@ -318,14 +362,18 @@ class MainApp(QMainWindow, Ui_MainWindow):
     def CopyOrMove(self, isCopyTo, mp4List, outputPath):
         if isCopyTo is True:
             self.Log("进入目录：{0}".format(outputPath))
-            self.Log("开始复制... 这可能需要一段时间...")
+            self.Log("正在复制... 这可能需要一段时间...")
+            self.progressBar.setValue(7)
             self.MutiThreadCopy(mp4List, outputPath)  # 多线程复制
             self.Log("复制完毕！")
+            self.progressBar.setValue(8)
         else:
             self.Log("进入目录：{0}".format(outputPath))
-            self.Log("开始移动... 这可能需要一段时间...")
+            self.Log("正在移动... 这可能需要一段时间...")
+            self.progressBar.setValue(7)
             self.MutiThreadMove(mp4List, outputPath)  # 多线程移动
             self.Log("移动完毕！")
+            self.progressBar.setValue(8)
 
     def DSpiderMode(self):
         pass
@@ -342,4 +390,3 @@ if __name__ == '__main__':
     if canRun:
         window.show()
         app.exec_()
-
