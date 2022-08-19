@@ -207,7 +207,7 @@ p, li { white-space: pre-wrap; }
     <property name="font">
      <font>
       <family>阿里巴巴普惠体 R</family>
-      <pointsize>7</pointsize>
+      <pointsize>10</pointsize>
       <weight>50</weight>
       <bold>false</bold>
      </font>
@@ -343,7 +343,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>1045</width>
-     <height>25</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>
