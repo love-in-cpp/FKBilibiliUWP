@@ -1,6 +1,7 @@
 import base64
 import datetime
 import os
+import shutil
 import threading
 
 from PyQt5 import QtCore
@@ -37,6 +38,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.setFixedSize(self.width(), self.height())
         self.SetLogText()
         self.SetProgressBar()
+        self.progressBar.setValue(0)
         self.InitCheckBox()
         self.path = os.getcwd()
         self.saveName = "set.ini"
@@ -49,7 +51,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.InitOutPutPath()  # 发布绿色版时注释
 
     def SetProgressBar(self):
-        self.progressBar.setRange(0, 10)
+        self.progressBar.setRange(0, 1000) # 1000的原因是防止进度条出现小于0的数
         self.progressBar.setValue(0)
 
 
@@ -84,13 +86,13 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.moveToOutput.setChecked(True)  # 默认不使用复制的方式
         self.localMode.setChecked(True)
 
-    def MutiThreadCopy(self, mp4List, outputPath):
-        t = threading.Thread(target=FileOperator.CopyFile, args=(mp4List, outputPath))
+    def MutiThreadCopy(self, mp4List, outputPath, videoCount):
+        t = threading.Thread(target=self.CopyFile, args=(mp4List, outputPath, videoCount))
         t.start()
         t.join()
 
-    def MutiThreadMove(self, mp4List, outputPath):
-        t = threading.Thread(target=FileOperator.MoveFile, args=(mp4List, outputPath))
+    def MutiThreadMove(self, mp4List, outputPath, videoCount):
+        t = threading.Thread(target=self.MoveFile, args=(mp4List, outputPath, videoCount))
         t.start()
         t.join()
 
@@ -273,7 +275,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
 
                 if self.isSpiderMode:
                     self.Log("开始爬取BV:{0}, 标题:{1} 的所有视频标题,请稍后...".format(dviInfoList[1], dviInfoList[3]))
-                    self.progressBar.setValue(1)
+                    self.progressBar.setValue(10)
                     try:
                         TitleSpider.GetTxt(dviInfoList[1], outputPath)
                     except Exception as e:
@@ -286,15 +288,15 @@ class MainApp(QMainWindow, Ui_MainWindow):
                     fileName = TitleSpider.fileName
                     self.LogOnBar('已成功爬取文件:  {0} ！  注：只显示部分文件名'.format(fileName[0:35]))
                     self.Log('已成功爬取文件:  {0} ！'.format(fileName))
-                    self.progressBar.setValue(2)
+                    self.progressBar.setValue(20)
 
                 elif self.isLocalMode:
                     self.Log("开始遍历获取BV:{0}, 标题:{1} 的所有视频标题,请稍后...".format(dviInfoList[1], dviInfoList[3]))
                     localVideoTitleList = FileOperator.GetLocalVideoTitle(downloadPath, dviInfoList[2])
                     fileName = FileOperator.GetTxt(localVideoTitleList, dviInfoList[3], outputPath)
-                    self.progressBar.setValue(1)
+                    self.progressBar.setValue(10)
                     self.Log('已成功获取文件:  {0} ！'.format(fileName))
-                    self.progressBar.setValue(2)
+                    self.progressBar.setValue(20)
 
                 else:
                     self.Log("impossible")
@@ -311,10 +313,12 @@ class MainApp(QMainWindow, Ui_MainWindow):
                     # QMessageBox.critical(self, "错误", "存在干扰文件！排序错误，请联系作者！" + str(e))
                     return
                 s = "查询到以下mp4文件：\n"
+                videoCount = 0
                 for item in mp4nameList:
                     s += (item + '\n')
+                    videoCount += 1
                 self.Log(s)
-                self.progressBar.setValue(3)
+                self.progressBar.setValue(30)
 
                 if os.path.isdir(outputPath) is False or os.path.isdir(
                         self.outputDirEdit.toPlainText().strip()) is False:
@@ -327,18 +331,19 @@ class MainApp(QMainWindow, Ui_MainWindow):
                     # 解密
                     self.Log("开始解密...")
                     FileOperator.DecryptMp4(downloadPath, dviInfoList[2])
-                    self.progressBar.setValue(4)
+                    self.progressBar.setValue(40)
                     self.Log("解密完毕！")
-                    self.progressBar.setValue(5)
-                    # 复制
-                    self.CopyOrMove(self.isCopyOutput, mp4List, outputPath)
+                    self.progressBar.setValue(50)
+                    # 复制 todo
+                    # self.SetProgressBar(self.progressBar.value(), self.progressBar.value() + videoCount + 2) # 适配进度条
+                    self.CopyOrMove(self.isCopyOutput, mp4List, outputPath, videoCount)
 
                     # 重命名
                     self.Log("开始重命名...")
-                    self.progressBar.setValue(9)
+                    self.progressBar.setValue(998)
                     FileOperator.DoRename(outputPath, fileName, dviInfoList[2], self.isLocalMode)
                     self.Log("重命名完毕！")
-                    self.progressBar.setValue(10)
+                    self.progressBar.setValue(1000)
 
                     # 进度条100％
                     # self.progressBar.setValue(100)
@@ -358,22 +363,30 @@ class MainApp(QMainWindow, Ui_MainWindow):
                         pass
                     # 重命名输出文件夹 搁置
 
+    def CopyFile(self, srcFileList, dstFolder, videoCount):
+        for file in srcFileList:
+            shutil.copy(file, dstFolder)
+            self.progressBar.setValue(self.progressBar.value() + int(950/videoCount))
+
+    def MoveFile(self, srcFileList, dstFolder, videoCount):
+        for file in srcFileList:
+            shutil.move(file, dstFolder)
+            self.progressBar.setValue(self.progressBar.value() + int(950/videoCount))
+
     # 输出方式：复制或移动
-    def CopyOrMove(self, isCopyTo, mp4List, outputPath):
+    def CopyOrMove(self, isCopyTo, mp4List, outputPath, videoCount):
         if isCopyTo is True:
             self.Log("进入目录：{0}".format(outputPath))
             self.Log("正在复制... 这可能需要一段时间...")
-            self.progressBar.setValue(7)
-            self.MutiThreadCopy(mp4List, outputPath)  # 多线程复制
+            self.MutiThreadCopy(mp4List, outputPath, videoCount)  # 多线程复制
+            # self.CopyFile(mp4List, outputPath, videoCount);
             self.Log("复制完毕！")
-            self.progressBar.setValue(8)
         else:
             self.Log("进入目录：{0}".format(outputPath))
             self.Log("正在移动... 这可能需要一段时间...")
-            self.progressBar.setValue(7)
-            self.MutiThreadMove(mp4List, outputPath)  # 多线程移动
+            self.MutiThreadMove(mp4List, outputPath, videoCount)  # 多线程移动
+            # self.MoveFile(mp4List, outputPath, videoCount)
             self.Log("移动完毕！")
-            self.progressBar.setValue(8)
 
     def DSpiderMode(self):
         pass
