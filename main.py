@@ -334,9 +334,22 @@ class MainApp(QMainWindow, Ui_MainWindow):
                     self.progressBar.setValue(40)
                     self.Log("解密完毕！")
                     self.progressBar.setValue(50)
-                    # 复制 todo
+                    # 复制 或 移动
+                    if self.isCopyOutput is True:
+                        self.Log("进入目录：{0}".format(outputPath))
+                        self.Log("正在复制... 这可能需要一段时间...")
+                        # self.MutiThreadCopy(mp4List, outputPath, videoCount)  # 多线程复制
+                        # self.CopyFile(mp4List, outputPath, videoCount);
+                        self.copyThread.copy(mp4List, outputPath, videoCount)
+                        self.Log("复制完毕！")
+                    else:
+                        self.Log("进入目录：{0}".format(outputPath))
+                        self.Log("正在移动... 这可能需要一段时间...")
+                        # self.MutiThreadMove(mp4List, outputPath, videoCount)  # 多线程移动
+                        # self.MoveFile(mp4List, outputPath, videoCount)
+                        self.moveThread.move(mp4List, outputPath, videoCount)
+                        self.Log("移动完毕！")
                     # self.SetProgressBar(self.progressBar.value(), self.progressBar.value() + videoCount + 2) # 适配进度条
-                    self.CopyOrMove(self.isCopyOutput, mp4List, outputPath, videoCount)
 
                     # 重命名
                     self.Log("开始重命名...")
@@ -362,43 +375,6 @@ class MainApp(QMainWindow, Ui_MainWindow):
                     else:
                         pass
                     # 重命名输出文件夹 搁置
-
-    def CopyFile(self, mp4List, outputPath, videoCount):
-        for file in mp4List:
-            shutil.copy(file, outputPath)
-            self.progressBar.setValue(self.progressBar.value() + int(950 / videoCount))
-
-    def MoveFile(self, mp4List, outputPath, videoCount):
-        for file in mp4List:
-            shutil.move(file, outputPath)
-            self.progressBar.setValue(self.progressBar.value() + int(950 / videoCount))
-
-    def MutiThreadCopy(self, mp4List, outputPath, videoCount):
-        t = threading.Thread(target=self.CopyFile, args=(mp4List, outputPath, videoCount))
-        t.start()
-        t.join()
-
-    def MutiThreadMove(self, mp4List, outputPath, videoCount):
-        t = threading.Thread(target=self.MoveFile, args=(mp4List, outputPath, videoCount))
-        t.start()
-        t.join()
-
-    # 输出方式：复制或移动
-    def CopyOrMove(self, isCopyTo, mp4List, outputPath, videoCount):
-        if isCopyTo is True:
-            self.Log("进入目录：{0}".format(outputPath))
-            self.Log("正在复制... 这可能需要一段时间...")
-            # self.MutiThreadCopy(mp4List, outputPath, videoCount)  # 多线程复制
-            # self.CopyFile(mp4List, outputPath, videoCount);
-            self.copyThread.copy(mp4List, outputPath, videoCount)
-            self.Log("复制完毕！")
-        else:
-            self.Log("进入目录：{0}".format(outputPath))
-            self.Log("正在移动... 这可能需要一段时间...")
-            # self.MutiThreadMove(mp4List, outputPath, videoCount)  # 多线程移动
-            # self.MoveFile(mp4List, outputPath, videoCount)
-            self.moveThread.move(mp4List, outputPath, videoCount)
-            self.Log("移动完毕！")
 
     def UpdateProgressBar(self, copyOrMoveProgress):
         self.progressBar.setValue(self.progressBar.value() + copyOrMoveProgress)
