@@ -48,6 +48,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.isTextSecondColumnHaveContent = False
         self.Log(
             "欢迎使用本工具，本工具发布于B站@落点dev。\n温馨提示：\n使用程序处理5GB以上的文件夹，出现未响应是正常现象。响应时间和硬盘读写速度挂钩，请耐心等待程序响应即可。\n\n期间你可以打开输出目录以观察处理进度，程序出现其它问题可以b站评论区评论或私信，如需快速回复可联系qq：3152319989")
+        self.statusbar.showMessage("作者QQ：3152319989；B站：落点dev")
         self.InitOutPutPath()  # 发布绿色版时注释
 
     def SetProgressBar(self):
@@ -142,7 +143,6 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.activityLogEdit.setReadOnly(True)
 
     def Log(self, msg):
-        self.statusbar.showMessage(msg)
         self.activityLogEdit.appendPlainText('[{0}]'.format(str(datetime.datetime.now())[0:19]))
         self.activityLogEdit.appendPlainText(msg)
         self.activityLogEdit.appendPlainText('')
