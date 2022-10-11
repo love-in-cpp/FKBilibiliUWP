@@ -45,7 +45,7 @@ def GetDviInfo(path):
             aid = re.findall(findAid, s)[0]
             title = re.findall(findDviTitle, s)[0]
             for s in title:
-                cut = ['|', '\\', '/', ':', '?', '"', '<', '>']
+                cut = ['|', '\\', '/', ':', '?', '"', '<', '>', '*']
                 if s in cut:
                     title = title.replace(s, ' ')
             return [isDviFounded, bid, aid, title]
@@ -199,7 +199,7 @@ def GetLocalVideoTitle(path, aID):
             s = str(lines[0])
             videoTitle = re.findall(findVideoTitle, s)[0]
             for s in videoTitle:
-                cut = ['|', '\\', '/', ':', '?', '"', '<', '>']
+                cut = ['|', '\\', '/', ':', '?', '"', '<', '>', '*']
                 if s in cut:
                     videoTitle = videoTitle.replace(s, ' ')
             titleList.append(videoTitle)
