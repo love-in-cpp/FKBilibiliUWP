@@ -5,7 +5,7 @@ import shutil
 import threading
 
 from PyQt5 import QtCore
-from PyQt5.QtCore import QBasicTimer
+from PyQt5.QtCore import QBasicTimer, QThread, pyqtSignal, QDateTime
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 import FileOperator
@@ -46,14 +46,24 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.isTextFileExists = False
         self.isTextFirstColumnHaveContent = False
         self.isTextSecondColumnHaveContent = False
+        self.InitThread()
         self.Log(
             "欢迎使用本工具，本工具发布于B站@落点dev。\n温馨提示：\n使用程序处理5GB以上的文件夹，出现未响应是正常现象。响应时间和硬盘读写速度挂钩，请耐心等待程序响应即可。\n\n期间你可以打开输出目录以观察处理进度，程序出现其它问题可以b站评论区评论或私信，如需快速回复可联系qq：3152319989")
         self.InitOutPutPath()  # 发布绿色版时注释
 
-    def SetProgressBar(self):
-        self.progressBar.setRange(0, 1000) # 1000的原因是防止进度条出现小于0的数
-        self.progressBar.setValue(0)
+    def InitThread(self):
+        self.copyThread = CopyThread()
+        self.copyThread.copyProgress.connect(self.UpdateProgressBar)
+        self.copyThread.start()
 
+        self.moveThread = MoveThread()
+        self.moveThread.moveProgress.connect(self.UpdateProgressBar)
+        self.moveThread.start()
+
+
+    def SetProgressBar(self):
+        self.progressBar.setRange(0, 1000)  # 1000的原因是防止进度条出现小于0的数
+        self.progressBar.setValue(0)
 
     def InitOutPutPath(self):
         self.isTextFileExists = FileOperator.SaveForOutput(self.path, self.saveName)
@@ -85,16 +95,6 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.deleteFileCheckBox.setChecked(True)  # 默认不保留源目录
         self.moveToOutput.setChecked(True)  # 默认不使用复制的方式
         self.localMode.setChecked(True)
-
-    def MutiThreadCopy(self, mp4List, outputPath, videoCount):
-        t = threading.Thread(target=self.CopyFile, args=(mp4List, outputPath, videoCount))
-        t.start()
-        t.join()
-
-    def MutiThreadMove(self, mp4List, outputPath, videoCount):
-        t = threading.Thread(target=self.MoveFile, args=(mp4List, outputPath, videoCount))
-        t.start()
-        t.join()
 
     def CheckIsChecked(self):  # 按下按钮的事件里调用，检查checkbox状态，并提示。最后给对应的bool变量赋值
         self.isSaveTxt = self.txtFileCheckBox.isChecked()
@@ -363,36 +363,68 @@ class MainApp(QMainWindow, Ui_MainWindow):
                         pass
                     # 重命名输出文件夹 搁置
 
-    def CopyFile(self, srcFileList, dstFolder, videoCount):
-        for file in srcFileList:
-            shutil.copy(file, dstFolder)
-            self.progressBar.setValue(self.progressBar.value() + int(950/videoCount))
+    def CopyFile(self, mp4List, outputPath, videoCount):
+        for file in mp4List:
+            shutil.copy(file, outputPath)
+            self.progressBar.setValue(self.progressBar.value() + int(950 / videoCount))
 
-    def MoveFile(self, srcFileList, dstFolder, videoCount):
-        for file in srcFileList:
-            shutil.move(file, dstFolder)
-            self.progressBar.setValue(self.progressBar.value() + int(950/videoCount))
+    def MoveFile(self, mp4List, outputPath, videoCount):
+        for file in mp4List:
+            shutil.move(file, outputPath)
+            self.progressBar.setValue(self.progressBar.value() + int(950 / videoCount))
+
+    def MutiThreadCopy(self, mp4List, outputPath, videoCount):
+        t = threading.Thread(target=self.CopyFile, args=(mp4List, outputPath, videoCount))
+        t.start()
+        t.join()
+
+    def MutiThreadMove(self, mp4List, outputPath, videoCount):
+        t = threading.Thread(target=self.MoveFile, args=(mp4List, outputPath, videoCount))
+        t.start()
+        t.join()
 
     # 输出方式：复制或移动
     def CopyOrMove(self, isCopyTo, mp4List, outputPath, videoCount):
         if isCopyTo is True:
             self.Log("进入目录：{0}".format(outputPath))
             self.Log("正在复制... 这可能需要一段时间...")
-            self.MutiThreadCopy(mp4List, outputPath, videoCount)  # 多线程复制
+            # self.MutiThreadCopy(mp4List, outputPath, videoCount)  # 多线程复制
             # self.CopyFile(mp4List, outputPath, videoCount);
+            self.copyThread.copy(mp4List, outputPath, videoCount)
             self.Log("复制完毕！")
         else:
             self.Log("进入目录：{0}".format(outputPath))
             self.Log("正在移动... 这可能需要一段时间...")
-            self.MutiThreadMove(mp4List, outputPath, videoCount)  # 多线程移动
+            # self.MutiThreadMove(mp4List, outputPath, videoCount)  # 多线程移动
             # self.MoveFile(mp4List, outputPath, videoCount)
+            self.moveThread.move(mp4List, outputPath, videoCount)
             self.Log("移动完毕！")
 
-    def DSpiderMode(self):
+    def UpdateProgressBar(self, copyOrMoveProgress):
+        self.progressBar.setValue(self.progressBar.value() + copyOrMoveProgress)
+
+
+class CopyThread(QThread):  # 创建子线程的具体实现
+    copyProgress = pyqtSignal(int)  # 设置传送信号
+
+    def run(self):
         pass
 
-    def DoLocalMode(self):
+    def copy(self, mp4List, outputPath, videoCount):
+        for file in mp4List:
+            shutil.copy(file, outputPath)
+            self.copyProgress.emit(int(950 / videoCount))
+
+
+class MoveThread(QThread):  # 创建子线程的具体实现
+    moveProgress = pyqtSignal(int)  # 设置传送信号
+
+    def run(self):
         pass
+    def move(self, mp4List, outputPath, videoCount):
+        for file in mp4List:
+            shutil.move(file, outputPath)
+            self.moveProgress.emit(int(950 / videoCount))
 
 
 if __name__ == '__main__':
